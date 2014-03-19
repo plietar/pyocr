@@ -1,0 +1,119 @@
+From: Jerome Flesch <jflesch@gmail.com>
+Date: Tue, 11 Mar 2014 16:00:44 +0100
+Subject: Fix: Take into account that new versions of Tesseract uses the file
+ extension .hocr instead of .html
+
+Signed-off-by: Jerome Flesch <jflesch@gmail.com>
+---
+ src/pyocr/builders.py  |  6 +++---
+ src/pyocr/cuneiform.py |  2 +-
+ src/pyocr/tesseract.py | 45 +++++++++++++++++++++++++++------------------
+ 3 files changed, 31 insertions(+), 22 deletions(-)
+
+diff --git a/src/pyocr/builders.py b/src/pyocr/builders.py
+index a19a908..8b4c361 100644
+--- a/src/pyocr/builders.py
++++ b/src/pyocr/builders.py
+@@ -235,7 +235,7 @@ class TextBuilder(object):
+         The returned string is encoded in UTF-8
+     """
+ 
+-    file_extension = "txt"
++    file_extensions = ["txt"]
+     tesseract_configs = []
+     cuneiform_args = ["-f", "text"]
+ 
+@@ -430,7 +430,7 @@ class WordBoxBuilder(object):
+     Box. Each box contains a word recognized in the image.
+     """
+ 
+-    file_extension = "html"
++    file_extensions = ["html", "hocr"]
+     tesseract_configs = ['hocr']
+     cuneiform_args = ["-f", "hocr"]
+ 
+@@ -485,7 +485,7 @@ class LineBoxBuilder(object):
+     LineBox. Each box contains a word recognized in the image.
+     """
+ 
+-    file_extension = "html"
++    file_extensions = ["html", "hocr"]
+     tesseract_configs = ['hocr']
+     cuneiform_args = ["-f", "hocr"]
+ 
+diff --git a/src/pyocr/cuneiform.py b/src/pyocr/cuneiform.py
+index f59128d..397da5a 100644
+--- a/src/pyocr/cuneiform.py
++++ b/src/pyocr/cuneiform.py
+@@ -86,7 +86,7 @@ def image_to_string(image, lang=None, builder=None):
+     if builder == None:
+         builder = builders.TextBuilder()
+ 
+-    with temp_file(builder.file_extension) as output_file:
++    with temp_file(builder.file_extensions[0]) as output_file:
+         cmd = [CUNEIFORM_CMD]
+         if lang != None:
+             cmd += ["-l", lang]
+diff --git a/src/pyocr/tesseract.py b/src/pyocr/tesseract.py
+index 36e94ea..0b4e857 100755
+--- a/src/pyocr/tesseract.py
++++ b/src/pyocr/tesseract.py
+@@ -60,7 +60,7 @@ class CharBoxBuilder(object):
+     Box. Each box correspond to a character recognized in the image.
+     """
+ 
+-    file_extension = "box"
++    file_extensions = ["box"]
+     tesseract_configs = ['batch.nochop', 'makebox']
+ 
+     def __init__(self):
+@@ -208,23 +208,32 @@ def image_to_string(image, lang=None, builder=None):
+     with temp_file(".bmp") as input_file:
+         with temp_file('')  as output_file:
+             output_file_name_base = output_file.name
+-        output_file_name = ('%s.%s' % (output_file_name_base,
+-                                       builder.file_extension))
+-
+-        try:
+-            image.save(input_file.name)
+-            (status, errors) = run_tesseract(input_file.name,
+-                                             output_file_name_base,
+-                                             lang=lang,
+-                                             configs=builder.tesseract_configs)
+-            if status:
+-                raise TesseractError(status, errors)
+-            with codecs.open(output_file_name, 'r', encoding='utf-8',
+-                             errors='replace') as file_desc:
+-                results = builder.read_file(file_desc)
+-            return results
+-        finally:
+-            cleanup(output_file_name)
++
++        image.save(input_file.name)
++        (status, errors) = run_tesseract(input_file.name,
++                                         output_file_name_base,
++                                         lang=lang,
++                                         configs=builder.tesseract_configs)
++        if status:
++            raise TesseractError(status, errors)
++
++        output_file_name = "ERROR"
++        for file_extension in builder.file_extensions:
++            output_file_name = ('%s.%s' % (output_file_name_base,
++                                           file_extension))
++            if not os.access(output_file_name, os.F_OK):
++                continue
++
++            try:
++                with codecs.open(output_file_name, 'r', encoding='utf-8',
++                                 errors='replace') as file_desc:
++                    results = builder.read_file(file_desc)
++                return results
++            finally:
++                cleanup(output_file_name)
++            break
++        raise TesseractError(-1, "Unable to find output file"
++                             " last name tried: %s" % output_file_name)
+ 
+ 
+ def is_available():

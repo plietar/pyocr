@@ -1,3 +1,10 @@
+python-pyocr (0.2.2-2) unstable; urgency=medium
+
+  * Debian release 0.2.2-1
+  * Cherry-pick 27d490 to fix Jessie tesseract.
+
+ -- Ross Vandegrift <ross@kallisti.us>  Wed, 19 Mar 2014 22:42:41 +0000
+
 python-pyocr (0.2.2-1) unstable; urgency=low
 
   * Initial release. (Closes: #741877)
