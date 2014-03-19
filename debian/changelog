@@ -1,0 +1,5 @@
+python-pyocr (0.2.2-1) unstable; urgency=low
+
+  * Initial release. (Closes: #741877)
+
+ -- Ross Vandegrift <ross@kallisti.us>  Sun, 16 Mar 2014 17:04:15 +0000

@@ -1,0 +1,13 @@
+Files: tesseract.py
+Copyright: 2009 Samuel Hoffstaetter
+	   2011-2013 Jerome Flesch
+License: GPL-3+
+
+Files: *
+Copyright: 2011-2013 Jerome Flesch
+License: GPL-3+
+
+Pyocr is released under the GPL v3+.
+
+On Debian systems, the complete text of the GNU General Public License
+can be found in the `/usr/share/common-licenses/GPL' file.

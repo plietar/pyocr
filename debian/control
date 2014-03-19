@@ -1,0 +1,42 @@
+Source: python-pyocr
+Maintainer: Ross Vandegrift <ross@kallisti.us>
+Section: python
+Priority: optional
+Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 9), dh-python, python-all (>= 2.7), python-setuptools, python3-all, python3-setuptools 
+Homepage: https://github.com/jflesch/pyocr
+Vcs-Browser: https://github.com/rvandegrift/pyocr/tree/debian
+Vcs-Git: https://github.com/rvandegrift/pyocr.git -b debian
+X-Python-Version: >= 2.7
+X-Python3-Version: >= 3.2
+
+
+Package: python-pyocr
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}
+Recommends: tesseract-ocr | cuneiform
+Description: Python wrapper for OCR engines (Python 2)
+ Pyocr is an optical character recognition (OCR) tool wrapper for
+ Python. That is, it helps using OCR tools from a Python program.
+ .
+ Pyocr can be used as a wrapper for google's Tesseract-OCR or
+ Cuneiform. It can read all image types supported by Pillow, including
+ jpeg, png, gif, bmp, tiff, and others. It also support bounding box
+ data.
+ .
+ This is the Python 2 version of the package.
+
+Package: python3-pyocr
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}
+Recommends: tesseract-ocr | cuneiform
+Description: Python wrapper for OCR engines (Python 3)
+ Pyocr is an optical character recognition (OCR) tool wrapper for
+ Python. That is, it helps using OCR tools from a Python program.
+ .
+ Pyocr can be used as a wrapper for google's Tesseract-OCR or
+ Cuneiform. It can read all image types supported by Pillow, including
+ jpeg, png, gif, bmp, tiff, and others. It also support bounding box
+ data.
+ .
+ This is the Python 3 version of the package.
