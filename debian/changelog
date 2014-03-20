@@ -1,3 +1,10 @@
+python-pyocr (0.2.2-3) unstable; urgency=medium
+
+  * Debian release 0.2.2-3
+  * Cherry-pick 07bb23 to fix Jessie hocr parsing.
+
+ -- Ross Vandegrift <ross@kallisti.us>  Thu, 20 Mar 2014 12:28:50 +0000
+
 python-pyocr (0.2.2-2) unstable; urgency=medium
 
   * Debian release 0.2.2-1
