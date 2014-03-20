@@ -1,3 +1,23 @@
+python-pyocr (0.2.3-1) unstable; urgency=medium
+
+  * New upstream release
+
+  [ Jerome Flesch ]
+  * Always strip the Alpha channel before trying to write the temporary images
+  * Fix: Take into account that new versions of Tesseract uses the file 
+    extension .hocr instead of .html
+  * Fix: Make hocr parsing more resistant: there maybe extra data around the 
+    box positions
+
+  [ Ross Vandegrift ]
+  * debian/patches:
+    * 0001-Fix-Take-into-account-that-new-versions-of-Tesseract.patch: 
+      remove; released upstream.
+    * 0002-Fix-Make-hocr-parsing-more-resistant-there-maybe-ext.patch:
+      remove; released upstream.
+
+ -- Ross Vandegrift <ross@kallisti.us>  Thu, 20 Mar 2014 21:18:53 +0000
+
 python-pyocr (0.2.2-3) unstable; urgency=medium
 
   * Debian release 0.2.2-3
