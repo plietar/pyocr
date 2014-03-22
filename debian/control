@@ -3,13 +3,12 @@ Maintainer: Ross Vandegrift <ross@kallisti.us>
 Section: python
 Priority: optional
 Standards-Version: 3.9.5
-Build-Depends: debhelper (>= 9), dh-python, python-all (>= 2.7), python-setuptools, python3-all, python3-setuptools 
+Build-Depends: debhelper (>= 9), dh-python, python-all (>= 2.7), python-setuptools, python3-all, python3-setuptools
 Homepage: https://github.com/jflesch/pyocr
 Vcs-Browser: https://github.com/rvandegrift/pyocr/tree/debian
 Vcs-Git: https://github.com/rvandegrift/pyocr.git -b debian
 X-Python-Version: >= 2.7
 X-Python3-Version: >= 3.2
-
 
 Package: python-pyocr
 Architecture: all
