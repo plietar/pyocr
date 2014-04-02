@@ -1,3 +1,9 @@
+python-pyocr (0.2.3-3) unstable; urgency=medium
+
+  * debian/control: update Build-Deps for tests
+
+ -- Ross Vandegrift <ross@kallisti.us>  Wed, 02 Apr 2014 18:43:08 -0400
+
 python-pyocr (0.2.3-2) unstable; urgency=medium
 
   * debian/control: remove extra whitespace
