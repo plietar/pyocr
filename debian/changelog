@@ -1,3 +1,9 @@
+python-pyocr (0.2.3-4) unstable; urgency=medium
+
+  * debian/control: fix depends on python-pil
+
+ -- Ross Vandegrift <ross@kallisti.us>  Sun, 06 Apr 2014 19:40:29 -0400
+
 python-pyocr (0.2.3-3) unstable; urgency=medium
 
   * debian/control: update Build-Deps for tests
