@@ -1,12 +1,12 @@
 Source: python-pyocr
-Maintainer: Ross Vandegrift <ross@kallisti.us>
+Maintainer: Paul Liétar <paul@lietar.net>
 Section: python
 Priority: optional
 Standards-Version: 3.9.5
 Build-Depends: debhelper (>= 9), dh-python, python-all (>= 2.7), python-setuptools, python3-all, python3-setuptools, python-pil, python3-pil, tesseract-ocr, tesseract-ocr-eng, tesseract-ocr-fra, tesseract-ocr-jpn
 Homepage: https://github.com/jflesch/pyocr
-Vcs-Browser: https://github.com/rvandegrift/pyocr/tree/debian
-Vcs-Git: https://github.com/rvandegrift/pyocr.git -b debian
+Vcs-Browser: https://github.com/plietar/pyocr/tree/debian
+Vcs-Git: https://github.com/plietar/pyocr.git -b debian
 X-Python-Version: >= 2.7
 X-Python3-Version: >= 3.2
 
