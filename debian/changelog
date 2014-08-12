@@ -1,3 +1,10 @@
+python-pyocr (0.2.3-5) unstable; urgency=medium
+
+  [ Paul Liétar ]
+  * debian: change package maintainer.
+
+ -- Paul Liétar <paul@lietar.net>  Tue, 12 Aug 2014 17:12:02 +0000
+
 python-pyocr (0.2.3-4) unstable; urgency=medium
 
   * debian/control: fix depends on python-pil
