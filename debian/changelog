@@ -1,6 +1,13 @@
+python-pyocr (0.2.4-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/patches: remove patches which have been upstreamed
+
+ -- Paul Liétar <paul@lietar.net>  Wed, 13 Aug 2014 12:10:37 +0000
+
 python-pyocr (0.2.3-5) unstable; urgency=medium
 
-  [ Paul Liétar ]
+  [ Paul Liétar ]
   * debian: change package maintainer.
 
  -- Paul Liétar <paul@lietar.net>  Tue, 12 Aug 2014 17:12:02 +0000
