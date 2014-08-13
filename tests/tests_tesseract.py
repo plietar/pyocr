@@ -22,6 +22,8 @@ class TestContext(unittest.TestCase):
         self.assertTrue(tesseract.is_available(),
                        "Tesseract not found. Is it installed ?")
 
+    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
+                     "This test only works with Tesseract 3.02.1")
     def test_version(self):
         self.assertEqual(tesseract.get_version(), (3, 2, 1),
                          ("Tesseract does not have the expected version"
@@ -71,9 +73,13 @@ class TestTxt(unittest.TestCase):
     def test_basic(self):
         self.__test_txt('test.png', 'test.txt')
 
+    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
+                     "This test only works with Tesseract 3.02.1")
     def test_european(self):
         self.__test_txt('test-european.jpg', 'test-european.txt')
 
+    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
+                     "This test only works with Tesseract 3.02.1")
     def test_french(self):
         self.__test_txt('test-french.jpg', 'test-french.txt', 'fra')
 
@@ -118,6 +124,8 @@ class TestCharBox(unittest.TestCase):
     def test_french(self):
         self.__test_txt('test-french.jpg', 'test-french.box', 'fra')
 
+    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
+                     "This test requires Tesseract 3.02.1")
     def test_japanese(self):
         self.__test_txt('test-japanese.jpg', 'test-japanese.box', 'jpn')
 
@@ -145,6 +153,32 @@ class TestCharBox(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+
+class TestDigits(unittest.TestCase):
+    """
+    These tests make sure that Tesseract digits handling works fine.
+    """
+    def setUp(self):
+        self.builder = tesseract.DigitBuilder()
+
+    def __test_text(self, image_file, expected_output_file, lang='eng'):
+        image_file = "tests/data/" + image_file
+        expected_output_file = "tests/tesseract/" + expected_output_file
+
+        expected_output = ""
+        with codecs.open(expected_output_file, 'r', encoding='utf-8') \
+                as file_descriptor:
+            for line in file_descriptor:
+                expected_output += line
+        expected_output = expected_output.strip()
+
+        output = tesseract.image_to_string(Image.open(image_file), lang=lang, builder=self.builder)
+
+        self.assertEqual(output, expected_output)
+
+    def test_digits(self):
+        self.__test_text('test-digits.png', 'test-digits.txt')
 
 
 class TestWordBox(unittest.TestCase):
@@ -190,6 +224,8 @@ class TestWordBox(unittest.TestCase):
     def test_french(self):
         self.__test_txt('test-french.jpg', 'test-french.words', 'fra')
 
+    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
+                     "This test requires Tesseract 3.02.1")
     def test_japanese(self):
         self.__test_txt('test-japanese.jpg', 'test-japanese.words', 'jpn')
 
@@ -256,6 +292,8 @@ class TestLineBox(unittest.TestCase):
     def test_french(self):
         self.__test_txt('test-french.jpg', 'test-french.lines', 'fra')
 
+    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
+                     "This test requires Tesseract 3.02.1")
     def test_japanese(self):
         self.__test_txt('test-japanese.jpg', 'test-japanese.lines', 'jpn')
 
@@ -283,6 +321,7 @@ class TestLineBox(unittest.TestCase):
 
     def tearDown(self):
         pass
+
 
 def get_all_tests():
     all_tests = unittest.TestSuite()
@@ -315,6 +354,12 @@ def get_all_tests():
     tests = unittest.TestSuite(map(TestWordBox, test_names))
     all_tests.addTest(tests)
     tests = unittest.TestSuite(map(TestLineBox, test_names))
+    all_tests.addTest(tests)
+
+    test_names = [
+        'test_digits'
+    ]
+    tests = unittest.TestSuite(map(TestDigits, test_names))
     all_tests.addTest(tests)
 
     return all_tests
