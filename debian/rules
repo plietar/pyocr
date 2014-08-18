@@ -6,5 +6,7 @@ export PYBUILD_NAME=pyocr
 %:
 	dh $@ --with python2,python3 --buildsystem=pybuild
 
+ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 override_dh_auto_test:
 	python$* run_tests.py
+endif
