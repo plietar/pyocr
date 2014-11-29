@@ -6,7 +6,7 @@ Files: *
 Copyright: 2011-2013 Jerome Flesch
 License: GPL-3+
 
-Files: tesseract.py
+Files: src/pyocr/tesseract.py
 Copyright: 2009 Samuel Hoffstaetter
 	   2011-2013 Jerome Flesch
 License: GPL-3+
