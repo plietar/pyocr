@@ -2,7 +2,7 @@ Source: python-pyocr
 Maintainer: Paul Liétar <paul@lietar.net>
 Section: python
 Priority: optional
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Build-Depends: debhelper (>= 9), dh-python, python-all (>= 2.7), python-setuptools, python3-all, python3-setuptools, python-pil, python3-pil, tesseract-ocr, tesseract-ocr-eng, tesseract-ocr-fra, tesseract-ocr-jpn
 Homepage: https://github.com/jflesch/pyocr
 Vcs-Browser: https://github.com/plietar/pyocr/tree/debian
