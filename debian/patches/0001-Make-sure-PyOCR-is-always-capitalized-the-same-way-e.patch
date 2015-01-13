@@ -1,0 +1,75 @@
+From: Jerome Flesch <jflesch@gmail.com>
+Date: Tue, 13 Jan 2015 19:06:27 +0100
+Subject: Make sure PyOCR is always capitalized the same way everywhere in the
+ doc
+
+Signed-off-by: Jerome Flesch <jflesch@gmail.com>
+---
+ README.markdown        | 8 ++++----
+ src/pyocr/cuneiform.py | 2 +-
+ src/pyocr/tesseract.py | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/README.markdown b/README.markdown
+index 4924bc9..bacfa11 100644
+--- a/README.markdown
++++ b/README.markdown
+@@ -1,12 +1,12 @@
+ # PyOCR
+ 
+-Pyocr is an optical character recognition (OCR) tool wrapper for python.
++PyOCR is an optical character recognition (OCR) tool wrapper for python.
+ That is, it helps using OCR tools from a Python program.
+ 
+ It has been tested only on GNU/Linux systems. It should also work on similar
+ systems (*BSD, etc). It doesn't work on Windows, MacOSX, etc.
+ 
+-Pyocr can be used as a wrapper for google's
++PyOCR can be used as a wrapper for google's
+ [Tesseract-OCR](http://code.google.com/p/tesseract-ocr/) or Cuneiform.
+ It can read all image types supported by
+ [Pillow](https://github.com/python-imaging/Pillow), including jpeg, png, gif,
+@@ -53,7 +53,7 @@ bmp, tiff, and others. It also support bounding box data.
+ 
+ ## Dependencies
+ 
+-* Pyocr requires python 2.7 or later.
++* PyOCR requires python 2.7 or later.
+ * You will need [Pillow](https://github.com/python-imaging/Pillow)
+   or Python Imaging Library (PIL). Under Debian/Ubuntu, PIL is in
+   the package "python-imaging".
+@@ -85,7 +85,7 @@ To run the tests, you will need the following lang support:
+ 
+ ## Copyright
+ 
+-Pyocr is released under the GPL v3+.
++PyOCR is released under the GPL v3+.
+ 
+ tesseract.py:
+ 
+diff --git a/src/pyocr/cuneiform.py b/src/pyocr/cuneiform.py
+index 5f5c761..6bf3bb2 100644
+--- a/src/pyocr/cuneiform.py
++++ b/src/pyocr/cuneiform.py
+@@ -9,7 +9,7 @@ USAGE:
+  > print image_to_string(Image.open('test-european.jpg'), lang='fra')
+ 
+ COPYRIGHT:
+-Pyocr is released under the GPL v3.
++PyOCR is released under the GPL v3.
+ Copyright (c) Samuel Hoffstaetter, 2009
+ Copyright (c) Jerome Flesch, 2011-2012
+ https://github.com/jflesch/python-tesseract#readme
+diff --git a/src/pyocr/tesseract.py b/src/pyocr/tesseract.py
+index 25a3f85..55912bf 100755
+--- a/src/pyocr/tesseract.py
++++ b/src/pyocr/tesseract.py
+@@ -10,7 +10,7 @@ USAGE:
+  > print(image_to_string(Image.open('test-european.jpg'), lang='fra'))
+ 
+ COPYRIGHT:
+-Pyocr is released under the GPL v3.
++PyOCR is released under the GPL v3.
+ Copyright (c) Samuel Hoffstaetter, 2009
+ Copyright (c) Jerome Flesch, 2011-2012
+ https://github.com/jflesch/python-tesseract#readme
