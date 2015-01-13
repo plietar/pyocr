@@ -2,7 +2,7 @@ import codecs
 from PIL import Image
 import os
 import sys
-sys.path = [ "src" ] + sys.path
+sys.path = ["src"] + sys.path
 import tempfile
 
 import unittest
@@ -20,14 +20,15 @@ class TestContext(unittest.TestCase):
 
     def test_available(self):
         self.assertTrue(tesseract.is_available(),
-                       "Tesseract not found. Is it installed ?")
+                        "Tesseract not found. Is it installed ?")
 
-    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
-                     "This test only works with Tesseract 3.02.1")
     def test_version(self):
-        self.assertEqual(tesseract.get_version(), (3, 2, 1),
-                         ("Tesseract does not have the expected version"
-                          " (3.02.1) ! Tests will fail !"))
+        self.assertTrue(tesseract.get_version() in (
+            (3, 2, 1),
+            (3, 2, 2),
+            (3, 3, 0),
+        ), ("Tesseract does not have the expected version"
+            " (3.3.0) ! Some tests will be skipped !"))
 
     def test_langs(self):
         langs = tesseract.get_available_languages()
@@ -40,7 +41,6 @@ class TestContext(unittest.TestCase):
         self.assertTrue("jpn" in langs,
                         ("Japanese training does not appear to be installed."
                          " (required for the tests)"))
-
 
     def tearDown(self):
         pass
@@ -69,17 +69,22 @@ class TestTxt(unittest.TestCase):
 
         self.assertEqual(output, expected_output)
 
-
     def test_basic(self):
         self.__test_txt('test.png', 'test.txt')
 
-    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
-                     "This test only works with Tesseract 3.02.1")
+    @unittest.skipIf(tesseract.get_version() not in (
+        (3, 2, 1),
+        (3, 2, 2),
+        (3, 3, 0),
+    ), "This test only works with Tesseract 3.02.1")
     def test_european(self):
         self.__test_txt('test-european.jpg', 'test-european.txt')
 
-    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
-                     "This test only works with Tesseract 3.02.1")
+    @unittest.skipIf(tesseract.get_version() not in (
+        (3, 2, 1),
+        (3, 2, 2),
+        (3, 3, 0),
+    ), "This test only works with Tesseract 3.02.1")
     def test_french(self):
         self.__test_txt('test-french.jpg', 'test-french.txt', 'fra')
 
@@ -124,8 +129,11 @@ class TestCharBox(unittest.TestCase):
     def test_french(self):
         self.__test_txt('test-french.jpg', 'test-french.box', 'fra')
 
-    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
-                     "This test requires Tesseract 3.02.1")
+    @unittest.skipIf(tesseract.get_version() not in (
+        (3, 2, 1),
+        (3, 2, 2),
+        (3, 3, 0),
+    ), "This test requires Tesseract 3.02.1")
     def test_japanese(self):
         self.__test_txt('test-japanese.jpg', 'test-japanese.box', 'jpn')
 
@@ -139,11 +147,11 @@ class TestCharBox(unittest.TestCase):
             # we must open the file with codecs.open() for utf-8 support
             os.close(file_descriptor)
 
-            with codecs.open(tmp_path, 'w', encoding='utf-8') as file_descriptor:
-                self.builder.write_file(file_descriptor, original_boxes)
+            with codecs.open(tmp_path, 'w', encoding='utf-8') as fdescriptor:
+                self.builder.write_file(fdescriptor, original_boxes)
 
-            with codecs.open(tmp_path, 'r', encoding='utf-8') as file_descriptor:
-                new_boxes = self.builder.read_file(file_descriptor)
+            with codecs.open(tmp_path, 'r', encoding='utf-8') as fdescriptor:
+                new_boxes = self.builder.read_file(fdescriptor)
 
             self.assertEqual(len(new_boxes), len(original_boxes))
             for i in range(0, len(original_boxes)):
@@ -173,7 +181,8 @@ class TestDigits(unittest.TestCase):
                 expected_output += line
         expected_output = expected_output.strip()
 
-        output = tesseract.image_to_string(Image.open(image_file), lang=lang, builder=self.builder)
+        output = tesseract.image_to_string(Image.open(image_file), lang=lang,
+                                           builder=self.builder)
 
         self.assertEqual(output, expected_output)
 
@@ -224,8 +233,11 @@ class TestWordBox(unittest.TestCase):
     def test_french(self):
         self.__test_txt('test-french.jpg', 'test-french.words', 'fra')
 
-    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
-                     "This test requires Tesseract 3.02.1")
+    @unittest.skipIf(tesseract.get_version() not in (
+        (3, 2, 1),
+        (3, 2, 2),
+        (3, 3, 0),
+    ), "This test requires Tesseract 3.02.1")
     def test_japanese(self):
         self.__test_txt('test-japanese.jpg', 'test-japanese.words', 'jpn')
 
@@ -239,11 +251,11 @@ class TestWordBox(unittest.TestCase):
             # we must open the file with codecs.open() for utf-8 support
             os.close(file_descriptor)
 
-            with codecs.open(tmp_path, 'w', encoding='utf-8') as file_descriptor:
-                self.builder.write_file(file_descriptor, original_boxes)
+            with codecs.open(tmp_path, 'w', encoding='utf-8') as fdescriptor:
+                self.builder.write_file(fdescriptor, original_boxes)
 
-            with codecs.open(tmp_path, 'r', encoding='utf-8') as file_descriptor:
-                new_boxes = self.builder.read_file(file_descriptor)
+            with codecs.open(tmp_path, 'r', encoding='utf-8') as fdescriptor:
+                new_boxes = self.builder.read_file(fdescriptor)
 
             self.assertEqual(len(new_boxes), len(original_boxes))
             for i in range(0, len(original_boxes)):
@@ -292,8 +304,11 @@ class TestLineBox(unittest.TestCase):
     def test_french(self):
         self.__test_txt('test-french.jpg', 'test-french.lines', 'fra')
 
-    @unittest.skipIf(tesseract.get_version() != (3, 2, 1),
-                     "This test requires Tesseract 3.02.1")
+    @unittest.skipIf(tesseract.get_version() not in (
+        (3, 2, 1),
+        (3, 2, 2),
+        (3, 3, 0),
+    ), "This test requires Tesseract 3.02.1")
     def test_japanese(self):
         self.__test_txt('test-japanese.jpg', 'test-japanese.lines', 'jpn')
 
@@ -307,11 +322,11 @@ class TestLineBox(unittest.TestCase):
             # we must open the file with codecs.open() for utf-8 support
             os.close(file_descriptor)
 
-            with codecs.open(tmp_path, 'w', encoding='utf-8') as file_descriptor:
-                self.builder.write_file(file_descriptor, original_boxes)
+            with codecs.open(tmp_path, 'w', encoding='utf-8') as fdescriptor:
+                self.builder.write_file(fdescriptor, original_boxes)
 
-            with codecs.open(tmp_path, 'r', encoding='utf-8') as file_descriptor:
-                new_boxes = self.builder.read_file(file_descriptor)
+            with codecs.open(tmp_path, 'r', encoding='utf-8') as fdescriptor:
+                new_boxes = self.builder.read_file(fdescriptor)
 
             self.assertEqual(len(new_boxes), len(original_boxes))
             for i in range(0, len(original_boxes)):
@@ -321,6 +336,21 @@ class TestLineBox(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+
+class TestOrientation(unittest.TestCase):
+    def test_can_detect_orientation(self):
+        self.assertTrue(tesseract.can_detect_orientation())
+
+    def test_orientation_0(self):
+        img = Image.open('tests/data/test.png')
+        result = tesseract.detect_orientation(img, lang='eng')
+        self.assertEqual(result['angle'], 0)
+
+    def test_orientation_90(self):
+        img = Image.open('tests/data/test-90.png')
+        result = tesseract.detect_orientation(img, lang='eng')
+        self.assertEqual(result['angle'], 90)
 
 
 def get_all_tests():
@@ -360,6 +390,14 @@ def get_all_tests():
         'test_digits'
     ]
     tests = unittest.TestSuite(map(TestDigits, test_names))
+    all_tests.addTest(tests)
+
+    test_names = [
+        'test_can_detect_orientation',
+        'test_orientation_0',
+        'test_orientation_90',
+    ]
+    tests = unittest.TestSuite(map(TestOrientation, test_names))
     all_tests.addTest(tests)
 
     return all_tests

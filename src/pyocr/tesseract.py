@@ -19,9 +19,7 @@ https://github.com/jflesch/python-tesseract#readme
 import codecs
 import os
 import subprocess
-import sys
 import tempfile
-import xml.dom.minidom
 
 from . import builders
 from . import util
@@ -37,6 +35,7 @@ TESSDATA_POSSIBLE_PATHS = [
     "/usr/local/share/tesseract-ocr/tessdata",
     "/usr/share/tesseract-ocr/tessdata",
     "/app/vendor/tesseract-ocr/tessdata",  # Heroku
+    "/opt/local/share/tessdata",  # OSX MacPorts
 ]
 
 TESSDATA_EXTENSION = ".traineddata"
@@ -44,7 +43,9 @@ TESSDATA_EXTENSION = ".traineddata"
 
 __all__ = [
     'CharBoxBuilder',
-    'DigitBuilder'
+    'DigitBuilder',
+    'can_detect_orientation',
+    'detect_orientation',
     'get_available_builders',
     'get_available_languages',
     'get_name',
@@ -108,8 +109,9 @@ class CharBoxBuilder(object):
 
 class DigitBuilder(builders.TextBuilder):
     """
-    If passed to image_to_string(), image_to_string() will return a string with only digits.
-    Characters recognition will consider text as if it will only composed by digits
+    If passed to image_to_string(), image_to_string() will return a string with
+    only digits. Characters recognition will consider text as if it will only
+    composed by digits.
     """
 
     @staticmethod
@@ -119,6 +121,60 @@ class DigitBuilder(builders.TextBuilder):
     def __init__(self, tesseract_layout=3):
         super(DigitBuilder, self).__init__(tesseract_layout)
         self.tesseract_configs.append("digits")
+
+
+def can_detect_orientation():
+    version = get_version()
+    return (
+        version[0] > 3
+        or (version[0] == 3 and version[1] >= 3)
+    )
+
+
+def detect_orientation(image, lang=None):
+    """
+    Arguments:
+        image --- Pillow image to analyze
+        lang --- lang to specify to tesseract
+
+    Returns:
+        {
+            'angle': 90,
+            'confidence': 23.73,
+        }
+
+    Raises:
+        TesseractError --- if no script detected on the image
+    """
+    command = [TESSERACT_CMD, 'stdin', 'stdout', "-psm", "0"]
+    if lang is not None:
+        command += ['-l', lang]
+
+    image = image.convert("RGB")
+
+    proc = subprocess.Popen(command, stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
+    image.save(proc.stdin, format='png')
+    proc.stdin.close()
+    output = proc.stdout.read()
+    proc.wait()
+
+    try:
+        output = output.decode("utf-8")
+        output = output.strip()
+        output = output.split("\n")
+        output = [line.split(": ") for line in output]
+        output = {x: y for (x, y) in output}
+        angle = int(output['Orientation in degrees'])
+        # Tesseract reports the angle in the opposite direction the one we want
+        angle = (360 - angle) % 360
+        return {
+            'angle': angle,
+            'confidence': float(output['Orientation confidence']),
+        }
+    except:
+        raise TesseractError(-1, "No script found in image")
 
 
 def get_name():
@@ -160,12 +216,12 @@ def run_tesseract(input_filename, output_filename_base, lang=None,
     if lang is not None:
         command += ['-l', lang]
 
-    if configs != None:
+    if configs is not None:
         command += configs
 
     proc = subprocess.Popen(command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
     # Beware that in some cases, tesseract may print more on stderr than
     # allowed by the buffer of subprocess.Popen.stderr. So we must read stderr
     # asap or Tesseract will remain stuck when trying to write again on stderr.
@@ -218,11 +274,11 @@ def image_to_string(image, lang=None, builder=None):
         string.
     '''
 
-    if builder == None:
+    if builder is None:
         builder = builders.TextBuilder()
 
     with temp_file(".bmp") as input_file:
-        with temp_file('')  as output_file:
+        with temp_file('') as output_file:
             output_file_name_base = output_file.name
 
         image = image.convert("RGB")
@@ -290,13 +346,13 @@ def get_version():
     command = [TESSERACT_CMD, "-v"]
 
     proc = subprocess.Popen(command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
     ver_string = proc.stdout.read()
     if hasattr(ver_string, 'decode'):
         ver_string = ver_string.decode('utf-8')
     ret = proc.wait()
-    if not ret in (0, 1):
+    if ret not in (0, 1):
         raise TesseractError(ret, ver_string)
 
     try:
@@ -309,11 +365,10 @@ def get_version():
             upd = els[2]
         return (major, minor, upd)
     except IndexError:
-        raise TesseractError(ret,
-                ("Unable to parse Tesseract version (spliting failed): [%s]"
-                 % (ver_string)))
+        raise TesseractError(
+            ret, ("Unable to parse Tesseract version (spliting failed): [%s]"
+                  % (ver_string)))
     except ValueError:
-        raise TesseractError(ret,
-                ("Unable to parse Tesseract version (not a number): [%s]"
-                 % (ver_string)))
-
+        raise TesseractError(
+            ret, ("Unable to parse Tesseract version (not a number): [%s]"
+                  % (ver_string)))
