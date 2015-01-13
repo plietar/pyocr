@@ -1,3 +1,10 @@
+python-pyocr (0.3.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian: Fix capitalization of project name
+
+ -- Paul Liétar <paul@lietar.net>  Tue, 13 Jan 2015 17:21:44 +0000
+
 python-pyocr (0.2.4-2) unstable; urgency=medium
 
   * debian/rules: do not run tests if DEB_BUILD_OPTIONS contains nocheck
